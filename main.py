@@ -7,7 +7,7 @@ except IndexError:
     exit()
 
 file = open(filename, "r", encoding="utf-8")
-output = open("output.md", "w", encoding="utf-8")
+output = open("output1.md", "w", encoding="utf-8")
 
 structure = {"number": 0}
 pre = []
@@ -18,7 +18,26 @@ for line in file.readlines():
         code = True if not code else False
 
     if line.startswith("#") and not code:
-        sline = line.strip().split(" ", 1)
+        sline = line.strip().split(" ", 2)
+
+        if len(sline) == 3:
+            is_line_numbers = True
+            if sline[1].endswith("."):
+                line_numbers = sline[1][:-1].split(".")
+
+                for i in line_numbers:
+                    try:
+                        int(i)
+                    except ValueError:
+                        is_line_numbers = False
+            else:
+                is_line_numbers = False
+
+            if is_line_numbers:
+                sline = [sline[0], sline[2]]
+            else:
+                sline = [sline[0], sline[1] + " " + sline[2]]
+
         prefix = sline[0]
         content = sline[1]
 
